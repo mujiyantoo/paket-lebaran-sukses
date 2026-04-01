@@ -1,0 +1,10 @@
+{
+  "name": "fullstack-app",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "install-all": "cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm run build"
+  }
+}
