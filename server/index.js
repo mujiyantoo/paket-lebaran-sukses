@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -20,6 +21,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/anggota', require('./routes/anggota'));
+app.use('/api/paket', require('./routes/paket'));
+app.use('/api/pembayaran', require('./routes/pembayaran'));
+app.use('/api/tabunganbebas', require('./routes/tabunganbebas'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
