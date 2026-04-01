@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    setIsOpen(false);
     navigate('/login');
   };
 
@@ -23,64 +25,100 @@ const Sidebar = () => {
   if (!token) return null;
 
   return (
-    <div className="w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white min-h-screen flex flex-col shadow-2xl">
-      <div className="p-6 border-b border-slate-700/50">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <>
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-4 py-3 flex items-center justify-between shadow-lg">
+        <button onClick={() => setIsOpen(!isOpen)} className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+          </svg>
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight">Paket Lebaran</h1>
-            <p className="text-xs text-slate-400">Sukses Mandiri</p>
-          </div>
+          <span className="font-bold text-sm">Paket Lebaran</span>
         </div>
+        <div className="w-8"></div>
       </div>
-      <nav className="flex-1 py-6 px-3">
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ${
-                isActive 
-                  ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border-l-4 border-amber-400' 
-                  : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-              </svg>
-              <span className="font-medium">{item.name}</span>
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="p-4 border-t border-slate-700/50">
-        <div className="bg-slate-800/50 rounded-xl p-4 mb-3">
+
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setIsOpen(false)}></div>
+      )}
+
+      {/* Sidebar - Desktop */}
+      <div className="hidden lg:flex w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white min-h-screen flex-col shadow-2xl">
+        <div className="p-6 border-b border-slate-700/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
-              <span className="text-sm font-bold">A</span>
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
             <div>
-              <p className="text-sm font-medium">Admin</p>
-              <p className="text-xs text-slate-400">Online</p>
+              <h1 className="text-xl font-bold tracking-tight">Paket Lebaran</h1>
+              <p className="text-xs text-slate-400">Sukses Mandiri</p>
             </div>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 py-3 rounded-xl transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span className="font-medium">Keluar</span>
-        </button>
+        <nav className="flex-1 py-6 px-3">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link key={item.path} to={item.path} className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ${isActive ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border-l-4 border-amber-400' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'}`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} /></svg>
+                <span className="font-medium">{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="p-4 border-t border-slate-700/50">
+          <div className="bg-slate-800/50 rounded-xl p-4 mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center"><span className="text-sm font-bold">A</span></div>
+              <div><p className="text-sm font-medium">Admin</p><p className="text-xs text-slate-400">Online</p></div>
+            </div>
+          </div>
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 py-3 rounded-xl transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+            <span className="font-medium">Keluar</span>
+          </button>
+        </div>
       </div>
-    </div>
+
+      {/* Sidebar - Mobile Slide */}
+      <div className={`lg:hidden fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-slate-700/50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div><h1 className="text-lg font-bold">Paket Lebaran</h1><p className="text-xs text-slate-400">Sukses Mandiri</p></div>
+          </div>
+          <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-700 rounded-lg"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></button>
+        </div>
+        <nav className="py-6 px-3">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-all ${isActive ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border-l-4 border-amber-400' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'}`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} /></svg>
+                <span className="font-medium">{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50">
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 py-3 rounded-xl">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+            <span className="font-medium">Keluar</span>
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 
